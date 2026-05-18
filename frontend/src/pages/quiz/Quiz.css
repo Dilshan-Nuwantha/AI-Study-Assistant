@@ -49,9 +49,9 @@
 
 .history-delete {
     justify-self: start;
-    border: 1px solid rgba(255, 80, 80, 0.4);
-    background: rgba(255, 80, 80, 0.12);
-    color: #b03030;
+    border: 1px solid rgba(120, 120, 120, 0.4);
+    background: rgba(180, 180, 180, 0.2);
+    color: #4b4b4b;
     padding: 6px 12px;
     border-radius: 10px;
     font-weight: 600;
@@ -75,15 +75,27 @@
 
 .history-request {
     font-weight: 600;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .history-response {
     color: var(--ink-soft);
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .history-response ul {
     margin: 0;
     padding-left: 18px;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .history-empty {

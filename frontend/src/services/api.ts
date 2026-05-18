@@ -63,6 +63,19 @@ export const getProfile = async () => {
   );
 };
 
+export const getGlobalStats = async () => {
+  return API.get<{ stats: { users: number; chats: number; summaries: number; quizzes: number } }>(
+    "/public/stats/global"
+  );
+};
+
+export const getRecentActivity = async (limit = 8) => {
+  return API.get<{ items: Array<{ id: string; type: string; username: string; request: string; responsePreview: string; createdAt: string }> }>(
+    "/public/activity/recent",
+    { params: { limit } }
+  );
+};
+
 export const getChatHistory = async (limit = 10, query = "") => {
   return API.get<{ items: Array<{ _id: string; request: string; response: string; createdAt: string }> }>(
     "/history/chat",
