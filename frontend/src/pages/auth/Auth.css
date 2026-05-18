@@ -1,0 +1,41 @@
+.auth__layout {
+    max-width: 480px;
+    margin: 0 auto;
+    display: grid;
+    gap: 24px;
+}
+
+.auth__toggle {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.auth__tab {
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.08);
+    color: inherit;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.auth__tab--active {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.auth__fields {
+    display: grid;
+    gap: 16px;
+}
+
+.auth__error {
+    color: #ffb4b4;
+    background: rgba(255, 63, 63, 0.15);
+    border: 1px solid rgba(255, 63, 63, 0.35);
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+}

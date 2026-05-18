@@ -13,7 +13,7 @@ export const chatController = async (req, res) => {
       return res.status(400).json({ error: "message is required" });
     }
 
-    const result = await chatService(message);
+    const result = await chatService(message, req.user);
 
     res.json({ result });
   } catch (err) {
@@ -37,7 +37,7 @@ export const summarizeController = async (req, res) => {
       return res.status(400).json({ error: "text is required" });
     }
 
-    const result = await summarizeService(text);
+    const result = await summarizeService(text, req.user);
 
     res.json({ result });
   } catch (err) {
@@ -61,7 +61,7 @@ export const quizController = async (req, res) => {
       return res.status(400).json({ error: "text is required" });
     }
 
-    const result = await quizService(text);
+    const result = await quizService(text, req.user);
 
     res.json(result);
   } catch (err) {
