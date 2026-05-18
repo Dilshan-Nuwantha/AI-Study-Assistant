@@ -1,0 +1,19 @@
+.quiz__layout {
+    display: grid;
+    gap: 22px;
+}
+
+.quiz__result {
+    padding: 22px;
+    border-radius: 20px;
+    border: 1px dashed var(--line);
+    background: #fbfcff;
+    color: var(--ink-soft);
+    min-height: 160px;
+    white-space: pre-wrap;
+}
+
+.quiz__result--filled {
+    color: var(--ink);
+    border-style: solid;
+}

@@ -1,7 +1,14 @@
+import "./Footer.css";
+
 export default function Footer() {
   return (
-    <footer className="text-center py-6 border-t text-sm text-gray-500">
-      © {new Date().getFullYear()} StudySense AI
+    <footer className="footer">
+      <div className="footer__inner">
+        <span>© {new Date().getFullYear()} StudySense AI</span>
+        <div className="footer__links">
+          <span>Built for modern learners</span>
+        </div>
+      </div>
     </footer>
   );
-} 
+}

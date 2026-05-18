@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { askAI } from "../services/api";
+import { askAI } from "../../services/api";
+import "./Chat.css";
 
 export default function Chat() {
   const [message, setMessage] = useState<string>("");
@@ -17,26 +18,38 @@ export default function Chat() {
   };
 
   return (
-    <div className="p-6">
-      <h2 className="text-xl font-bold mb-4">AI Chat</h2>
+    <div className="page-shell chat">
+      <div className="page-head">
+        <h2 className="page-title">AI Chat</h2>
+        <p className="page-subtitle">Ask a question and get instant guidance.</p>
+      </div>
 
-      <input
-        className="border p-2 w-full"
-        placeholder="Ask something..."
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-      />
+      <div className="chat__layout">
+        <div className="card panel">
+          <label className="field">
+            <span className="field__label">Your question</span>
+            <input
+              className="input"
+              placeholder="Ask something..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
+          </label>
 
-      <button
-        onClick={handleAsk}
-        className="bg-green-600 text-white px-4 py-2 mt-4"
-        disabled={loading}
-      >
-        {loading ? "Thinking..." : "Ask AI"}
-      </button>
+          <button
+            onClick={handleAsk}
+            className="btn btn-primary"
+            disabled={loading}
+          >
+            {loading ? "Thinking..." : "Ask AI"}
+          </button>
+        </div>
 
-      <div className="mt-6 whitespace-pre-wrap">
-        {response}
+        <div
+          className={`chat__response ${response ? "chat__response--filled" : ""}`}
+        >
+          {response || "Your response will appear here."}
+        </div>
       </div>
     </div>
   );

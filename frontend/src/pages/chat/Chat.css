@@ -1,0 +1,19 @@
+.chat__layout {
+    display: grid;
+    gap: 22px;
+}
+
+.chat__response {
+    padding: 22px;
+    border-radius: 20px;
+    border: 1px dashed var(--line);
+    background: #fbfcff;
+    color: var(--ink-soft);
+    min-height: 140px;
+    white-space: pre-wrap;
+}
+
+.chat__response--filled {
+    color: var(--ink);
+    border-style: solid;
+}

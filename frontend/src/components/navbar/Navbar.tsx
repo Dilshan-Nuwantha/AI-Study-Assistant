@@ -1,15 +1,21 @@
 import { Link } from "react-router-dom";
+import "./Navbar.css";
 
 export default function Navbar() {
   return (
-    <nav className="flex justify-between items-center px-6 py-4 border-b bg-white">
-      <h1 className="text-xl font-bold">StudySense AI</h1>
+    <nav className="navbar">
+      <div className="navbar__inner">
+        <div className="navbar__brand">
+          <span className="navbar__logo" aria-hidden="true" />
+          <span className="navbar__name">StudySense AI</span>
+        </div>
 
-      <div className="flex gap-6 text-sm">
-        <Link to="/">Home</Link>
-        <Link to="/upload">Upload</Link>
-        <Link to="/chat">Chat</Link>
-        <Link to="/quiz">Quiz</Link>
+        <div className="navbar__links">
+          <Link className="navbar__link" to="/">Home</Link>
+          <Link className="navbar__link" to="/upload">Upload</Link>
+          <Link className="navbar__link" to="/chat">Chat</Link>
+          <Link className="navbar__link" to="/quiz">Quiz</Link>
+        </div>
       </div>
     </nav>
   );
