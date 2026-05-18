@@ -3,7 +3,7 @@ import {
   chatController,
   summarizeController,
   quizController,
-} from "../controllers/ai.controller.js";
+} from "../controllers/ai.Controller.js";
 
 const router = express.Router();
 
