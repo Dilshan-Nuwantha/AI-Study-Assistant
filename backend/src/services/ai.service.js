@@ -1,4 +1,4 @@
-import { getGeminiModel } from "../config/gemini.js";
+import { getGeminiApiKey, getGeminiModel } from "../config/gemini.js";
 
 const extractJson = (rawText) => {
   const trimmed = rawText.trim();
@@ -50,4 +50,24 @@ export const quizService = async (text) => {
       },
     ],
   };
+};
+
+export const listModelsService = async () => {
+  const apiKey = getGeminiApiKey();
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`
+  );
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(`Model list failed: ${response.status} ${body}`);
+  }
+
+  const data = await response.json();
+  const models = Array.isArray(data?.models) ? data.models : [];
+
+  return models.map((model) => ({
+    name: model.name,
+    supportedGenerationMethods: model.supportedGenerationMethods || [],
+  }));
 };

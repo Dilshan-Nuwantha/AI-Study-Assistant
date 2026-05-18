@@ -11,7 +11,7 @@ export default function Upload() {
     setLoading(true);
     try {
       const res = await summarizeNotes({ text });
-      setResult(res.data.summary);
+      setResult(res.data.result?.summary ?? "");
     } finally {
       setLoading(false);
     }

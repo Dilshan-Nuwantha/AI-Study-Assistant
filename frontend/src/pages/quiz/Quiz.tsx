@@ -4,14 +4,16 @@ import "./Quiz.css";
 
 export default function Quiz() {
   const [text, setText] = useState<string>("");
-  const [quiz, setQuiz] = useState<string>("");
+  const [quiz, setQuiz] = useState<Array<{ question: string; answer: string }>>(
+    []
+  );
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleGenerate = async () => {
     setLoading(true);
     try {
       const res = await generateQuiz({ text });
-      setQuiz(res.data.quiz);
+      setQuiz(Array.isArray(res.data.questions) ? res.data.questions : []);
     } finally {
       setLoading(false);
     }
@@ -46,8 +48,19 @@ export default function Quiz() {
           </button>
         </div>
 
-        <div className={`quiz__result ${quiz ? "quiz__result--filled" : ""}`}>
-          {quiz || "Your generated quiz will show up here."}
+        <div className={`quiz__result ${quiz.length ? "quiz__result--filled" : ""}`}>
+          {quiz.length ? (
+            <div className="quiz__list">
+              {quiz.map((item, index) => (
+                <div className="quiz__item" key={`${index}-${item.question}`}>
+                  <div className="quiz__question">{item.question}</div>
+                  <div className="quiz__answer">{item.answer}</div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            "Your generated quiz will show up here."
+          )}
         </div>
       </div>
     </div>

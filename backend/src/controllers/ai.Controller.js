@@ -2,6 +2,7 @@ import {
   chatService,
   summarizeService,
   quizService,
+  listModelsService,
 } from "../services/ai.service.js";
 
 // CHAT
@@ -47,6 +48,16 @@ export const quizController = async (req, res) => {
     const result = await quizService(text);
 
     res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// MODELS
+export const modelsController = async (req, res) => {
+  try {
+    const models = await listModelsService();
+    res.json({ models });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

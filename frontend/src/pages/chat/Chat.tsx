@@ -11,7 +11,7 @@ export default function Chat() {
     setLoading(true);
     try {
       const res = await askAI({ message });
-      setResponse(res.data.reply);
+      setResponse(res.data.result);
     } finally {
       setLoading(false);
     }
