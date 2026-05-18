@@ -1,17 +1,22 @@
 import { useState } from "react";
-import { askAI } from "../../services/api";
+import { askAI, getApiErrorMessage } from "../../services/api";
 import "./Chat.css";
 
 export default function Chat() {
   const [message, setMessage] = useState<string>("");
   const [response, setResponse] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
   const handleAsk = async () => {
     setLoading(true);
+    setError("");
     try {
       const res = await askAI({ message });
       setResponse(res.data.result);
+    } catch (err) {
+      setResponse("");
+      setError(getApiErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -46,9 +51,9 @@ export default function Chat() {
         </div>
 
         <div
-          className={`chat__response ${response ? "chat__response--filled" : ""}`}
+          className={`chat__response ${response || error ? "chat__response--filled" : ""}`}
         >
-          {response || "Your response will appear here."}
+          {error || response || "Your response will appear here."}
         </div>
       </div>
     </div>

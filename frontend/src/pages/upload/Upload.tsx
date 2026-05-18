@@ -1,17 +1,22 @@
 import { useState } from "react";
-import { summarizeNotes } from "../../services/api";
+import { summarizeNotes, getApiErrorMessage } from "../../services/api";
 import "./Upload.css";
 
 export default function Upload() {
   const [text, setText] = useState<string>("");
   const [result, setResult] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
   const handleSubmit = async () => {
     setLoading(true);
+    setError("");
     try {
       const res = await summarizeNotes({ text });
       setResult(res.data.result?.summary ?? "");
+    } catch (err) {
+      setResult("");
+      setError(getApiErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -46,8 +51,10 @@ export default function Upload() {
           </button>
         </div>
 
-        <div className={`upload__result ${result ? "upload__result--filled" : ""}`}>
-          {result || "Your summary will appear here once generated."}
+        <div
+          className={`upload__result ${result || error ? "upload__result--filled" : ""}`}
+        >
+          {error || result || "Your summary will appear here once generated."}
         </div>
       </div>
     </div>

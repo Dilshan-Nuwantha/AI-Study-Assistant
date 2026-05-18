@@ -17,7 +17,15 @@ export const chatController = async (req, res) => {
 
     res.json({ result });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    const status = err?.status || 500;
+    if (err?.retryAfter) {
+      res.set("Retry-After", String(err.retryAfter));
+    }
+    res.status(status).json({
+      error: err?.message || "Unexpected error",
+      code: err?.code,
+      retryAfter: err?.retryAfter,
+    });
   }
 };
 
@@ -33,7 +41,15 @@ export const summarizeController = async (req, res) => {
 
     res.json({ result });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    const status = err?.status || 500;
+    if (err?.retryAfter) {
+      res.set("Retry-After", String(err.retryAfter));
+    }
+    res.status(status).json({
+      error: err?.message || "Unexpected error",
+      code: err?.code,
+      retryAfter: err?.retryAfter,
+    });
   }
 };
 
@@ -49,7 +65,15 @@ export const quizController = async (req, res) => {
 
     res.json(result);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    const status = err?.status || 500;
+    if (err?.retryAfter) {
+      res.set("Retry-After", String(err.retryAfter));
+    }
+    res.status(status).json({
+      error: err?.message || "Unexpected error",
+      code: err?.code,
+      retryAfter: err?.retryAfter,
+    });
   }
 };
 
@@ -59,6 +83,14 @@ export const modelsController = async (req, res) => {
     const models = await listModelsService();
     res.json({ models });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    const status = err?.status || 500;
+    if (err?.retryAfter) {
+      res.set("Retry-After", String(err.retryAfter));
+    }
+    res.status(status).json({
+      error: err?.message || "Unexpected error",
+      code: err?.code,
+      retryAfter: err?.retryAfter,
+    });
   }
 };

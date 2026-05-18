@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { generateQuiz } from "../../services/api";
+import { generateQuiz, getApiErrorMessage } from "../../services/api";
 import "./Quiz.css";
 
 export default function Quiz() {
@@ -8,12 +8,17 @@ export default function Quiz() {
     []
   );
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
   const handleGenerate = async () => {
     setLoading(true);
+    setError("");
     try {
       const res = await generateQuiz({ text });
       setQuiz(Array.isArray(res.data.questions) ? res.data.questions : []);
+    } catch (err) {
+      setQuiz([]);
+      setError(getApiErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -48,8 +53,12 @@ export default function Quiz() {
           </button>
         </div>
 
-        <div className={`quiz__result ${quiz.length ? "quiz__result--filled" : ""}`}>
-          {quiz.length ? (
+        <div
+          className={`quiz__result ${quiz.length || error ? "quiz__result--filled" : ""}`}
+        >
+          {error ? (
+            error
+          ) : quiz.length ? (
             <div className="quiz__list">
               {quiz.map((item, index) => (
                 <div className="quiz__item" key={`${index}-${item.question}`}>

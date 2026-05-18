@@ -17,25 +17,103 @@ const extractJson = (rawText) => {
   }
 };
 
+const parseRetryAfterSeconds = (message) => {
+  if (!message || typeof message !== "string") {
+    return null;
+  }
+
+  const match = message.match(/retry\s+(?:in|after)\s+([\d.]+)s/i);
+  if (match?.[1]) {
+    const seconds = Number(match[1]);
+    return Number.isFinite(seconds) ? Math.ceil(seconds) : null;
+  }
+
+  const retryInfoMatch = message.match(/"retryDelay"\s*:\s*"(\d+)s"/i);
+  if (retryInfoMatch?.[1]) {
+    const seconds = Number(retryInfoMatch[1]);
+    return Number.isFinite(seconds) ? seconds : null;
+  }
+
+  return null;
+};
+
+const mapGeminiError = (err) => {
+  const status = err?.status || err?.statusCode || err?.response?.status;
+  const message = err?.message || String(err);
+
+  if (status === 429 || /429|quota\s+exceeded|too\s+many\s+requests/i.test(message)) {
+    const retryAfter = parseRetryAfterSeconds(message);
+
+    return {
+      status: 429,
+      code: "quota_exceeded",
+      message: retryAfter
+        ? `Rate limit exceeded. Please retry in ${retryAfter} seconds.`
+        : "Rate limit exceeded. Please retry shortly.",
+      retryAfter,
+    };
+  }
+
+  return null;
+};
+
 export const chatService = async (message) => {
   const prompt = `Answer the user's question clearly and concisely.\nUser: ${message}`;
   const model = getGeminiModel();
-  const result = await model.generateContent(prompt);
-  return result.response.text();
+  try {
+    const result = await model.generateContent(prompt);
+    return result.response.text();
+  } catch (err) {
+    const mapped = mapGeminiError(err);
+    if (mapped) {
+      const error = new Error(mapped.message);
+      error.status = mapped.status;
+      error.code = mapped.code;
+      error.retryAfter = mapped.retryAfter;
+      throw error;
+    }
+    throw err;
+  }
 };
 
 export const summarizeService = async (text) => {
   const prompt = `Summarize the following text in 3-5 sentences:\n${text}`;
   const model = getGeminiModel();
-  const result = await model.generateContent(prompt);
-  return { summary: result.response.text().trim() };
+  try {
+    const result = await model.generateContent(prompt);
+    return { summary: result.response.text().trim() };
+  } catch (err) {
+    const mapped = mapGeminiError(err);
+    if (mapped) {
+      const error = new Error(mapped.message);
+      error.status = mapped.status;
+      error.code = mapped.code;
+      error.retryAfter = mapped.retryAfter;
+      throw error;
+    }
+    throw err;
+  }
 };
 
 export const quizService = async (text) => {
   const prompt = `Create 5 quiz questions with short answers based on this text. Return JSON with "questions":[{"question":"...","answer":"..."}].\nText:\n${text}`;
   const model = getGeminiModel();
-  const result = await model.generateContent(prompt);
-  const rawText = result.response.text();
+  let rawText = "";
+  try {
+    const result = await model.generateContent(prompt);
+    rawText = result.response.text();
+  } catch (err) {
+    const mapped = mapGeminiError(err);
+    if (mapped) {
+      const error = new Error(mapped.message);
+      error.status = mapped.status;
+      error.code = mapped.code;
+      error.retryAfter = mapped.retryAfter;
+      throw error;
+    }
+    throw err;
+  }
+
   const parsed = extractJson(rawText);
 
   if (parsed && Array.isArray(parsed.questions)) {
